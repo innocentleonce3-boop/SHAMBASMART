@@ -5,6 +5,7 @@ coverage/
 .vercel/
 *.tsbuildinfo
 .vercel/
+supabase/.temp/
 playwright-report/
 test-results/
 .env
