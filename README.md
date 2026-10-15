@@ -39,7 +39,7 @@ The public landing page works without Supabase configuration. Authenticated page
 
 ## Partial or not yet verified
 
-- The Supabase project key was not present in workspace or local VS Code settings during this setup. Live authentication, database reads/writes, storage uploads, weather requests, and RLS behavior have not been verified against the supplied project.
+- The Supabase project key was not present in workspace or local VS Code settings during initial setup. Live authentication, database reads/writes, storage uploads, weather requests, and RLS behavior have not been verified against the supplied project.
 - The migrations have not been applied to the remote database. Review both migration files before running them.
 - English/Kiswahili selection currently localizes the shared navigation and selected dashboard/settings labels; several forms and feature pages remain English.
 - The dashboard shows database-backed totals and upcoming tasks, but does not yet include the planned charts, crop comparisons, or complete analytics filters.
