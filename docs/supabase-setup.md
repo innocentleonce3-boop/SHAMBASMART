@@ -9,13 +9,13 @@ NEXT_PUBLIC_SUPABASE_URL=https://gkysqjpblbwddfxqiejq.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-project-publishable-key
 ```
 
-The publishable key was not found in local configuration during this audit. Retrieve it from Supabase Project Settings → API Keys. Do not substitute a secret/service-role key.
+The supplied publishable key is configured in the ignored local `.env.local`. To configure another environment, retrieve its key from Supabase Project Settings → API Keys. Do not substitute a secret/service-role key.
 
 ## Migrations
 
 The ordered migrations create profiles, farms/memberships, fields, crops/seasons, activities, observations, weather cache, harvests, finance, conversations, messages, notifications, settings, audit log, RLS, and the private `farm-media` bucket. The second migration adds same-farm constraints and support/admin policies.
 
-Review the SQL and a CLI dry run before applying. To connect the CLI to the provided hosted project, use project ref `gkysqjpblbwddfxqiejq`; do not run `db reset` against it. Remote migrations have not been applied or verified.
+Review the SQL and a CLI dry run before applying. To connect the CLI to the provided hosted project, use project ref `gkysqjpblbwddfxqiejq`; do not run `db reset` against it. The Auth settings endpoint returned HTTP 200 with the supplied URL/key; the `farms` REST endpoint returned 404. Remote migrations have not been applied or verified. The CLI requires a project access token via `supabase login`; enter it only in the local CLI prompt, never in chat.
 
 ## Dashboard configuration
 
