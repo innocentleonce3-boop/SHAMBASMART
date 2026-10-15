@@ -2,6 +2,12 @@
 
 ShambaSmart is a Tanzania-focused farm-management MVP built with Next.js App Router, TypeScript, Tailwind CSS, and Supabase. It uses TZS for recorded money values and includes English/Kiswahili message dictionaries.
 
+## Vision
+
+ShambaSmart aims to make farm management easier through accessible tools for agricultural planning, record-keeping, crop monitoring, and financial tracking. Its initial focus is practical support for farmers and farm teams in Tanzania.
+
+The project objectives are to improve farm record organization, connect crop and activity records, support harvest and expense tracking, and make useful farm information available in English and Kiswahili. The capabilities below describe the current implementation; roadmap items are called out separately.
+
 ## Requirements
 
 - Node.js 20.9 or newer
