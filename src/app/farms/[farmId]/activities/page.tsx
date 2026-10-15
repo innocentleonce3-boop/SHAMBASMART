@@ -1,0 +1,25 @@
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { notFound } from "next/navigation";
+import { completeActivity } from "@/features/activities/actions";
+import { createClient } from "@/lib/supabase/server";
+
+export default async function ActivitiesPage({ params, searchParams }: { params: Promise<{ farmId: string }>; searchParams: Promise<{ from?: string; to?: string; status?: string; updated?: string; "update-error"?: string }> }) {
+  const [{ farmId }, filters] = await Promise.all([params, searchParams]);
+  const supabase = await createClient();
+  const { data: farm } = await supabase.from("farms").select("id, name").eq("id", farmId).maybeSingle();
+  if (!farm) notFound();
+
+  let activityQuery = supabase.from("farm_activities").select("*").eq("farm_id", farmId).order("activity_date", { ascending: false });
+  if (filters.from) activityQuery = activityQuery.gte("activity_date", filters.from);
+  if (filters.to) activityQuery = activityQuery.lte("activity_date", filters.to);
+  if (filters.status && ["planned", "in_progress", "completed", "cancelled"].includes(filters.status)) activityQuery = activityQuery.eq("status", filters.status as "planned" | "in_progress" | "completed" | "cancelled");
+  const { data: activities, error } = await activityQuery;
+
+  return <main className="min-h-screen bg-[#f7f8f4]"><header className="flex h-16 items-center justify-between border-b border-[#e4e9e1] bg-white px-5 sm:px-9"><Link href={`/farms/${farmId}`} className="text-sm font-semibold text-[#46554a]">← {farm.name}</Link><Link href="/farms" className="text-sm text-[#536257]">Farms</Link></header><section className="mx-auto max-w-[960px] px-5 py-10 sm:px-9 sm:py-14">
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-medium text-[#557d45]">Farm records</p><h1 className="mt-2 text-3xl font-semibold tracking-tight">Activities</h1></div><Link href={`/farms/${farmId}/activities/new`} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#245c3c] px-4 text-sm font-semibold text-white"><Plus size={16} /> Record activity</Link></div>
+    {filters.updated && <p role="status" className="mt-5 text-sm text-[#385b38]">Activity marked complete.</p>}{filters["update-error"] && <p role="alert" className="mt-5 text-sm text-red-800">Activity could not be updated. Check access and try again.</p>}
+    <form method="get" className="mt-6 flex flex-wrap items-end gap-3 rounded-lg border border-[#e1e7de] bg-white p-4"><label className="text-xs font-medium text-[#536257]">From<input type="date" name="from" defaultValue={filters.from} className="mt-1 block min-h-9 rounded-md border border-[#d9e1d7] px-2 text-sm" /></label><label className="text-xs font-medium text-[#536257]">To<input type="date" name="to" defaultValue={filters.to} className="mt-1 block min-h-9 rounded-md border border-[#d9e1d7] px-2 text-sm" /></label><label className="text-xs font-medium text-[#536257]">Status<select name="status" defaultValue={filters.status ?? ""} className="mt-1 block min-h-9 rounded-md border border-[#d9e1d7] bg-white px-2 text-sm"><option value="">All</option><option value="planned">Planned</option><option value="in_progress">In progress</option><option value="completed">Completed</option></select></label><button className="min-h-9 rounded-md bg-[#edf4e8] px-3 text-sm font-semibold text-[#365b3b]">Filter</button></form>
+    {error ? <p role="alert" className="mt-6 bg-white p-5 text-sm text-red-800">Activities could not be loaded. Check your connection and try again.</p> : !activities?.length ? <div className="mt-6 border border-dashed border-[#cfd9cc] bg-white px-6 py-12 text-center"><h2 className="text-base font-semibold">No activities match</h2><p className="mt-2 text-sm text-[#657168]">Record farm work to build your activity history.</p></div> : <ul className="mt-6 divide-y divide-[#edf0eb] rounded-lg border border-[#e1e7de] bg-white">{activities.map((activity) => <li key={activity.id} className="flex flex-wrap items-start justify-between gap-4 px-5 py-4"><div><p className="text-sm font-semibold">{activity.title}</p><p className="mt-1 text-xs capitalize text-[#657168]">{activity.activity_type.replaceAll("_", " ")} · {activity.activity_date} · {activity.status.replaceAll("_", " ")}</p>{activity.cost_tzs !== null && <p className="mt-2 text-xs text-[#657168]">Recorded cost: TZS {activity.cost_tzs.toLocaleString("en-TZ")}</p>}</div>{activity.status !== "completed" && activity.status !== "cancelled" && <form action={completeActivity}><input type="hidden" name="activityId" value={activity.id} /><input type="hidden" name="farmId" value={farmId} /><button className="min-h-9 rounded-md border border-[#d9e1d7] px-3 text-xs font-semibold text-[#416b3e]">Mark complete</button></form>}</li>)}</ul>}
+  </section></main>;
+}

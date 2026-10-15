@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --ink: #202923;
+  --muted: #657168;
+  --green: #245c3c;
+  --green-bright: #78a94c;
+  --line: #e4e9e1;
+  --paper: #f7f8f4;
+  --surface: #ffffff;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--paper); }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", sans-serif;
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; }
+button, input { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+::selection { background: #dcebd2; color: #173f2a; }
+
+.dashboard-grid {
+  background-image: linear-gradient(to right, rgba(36, 92, 60, .035) 1px, transparent 1px), linear-gradient(to bottom, rgba(36, 92, 60, .035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .enter { animation: enter .55s ease both; }
+  .enter-delay { animation: enter .55s .12s ease both; }
+  @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+}
